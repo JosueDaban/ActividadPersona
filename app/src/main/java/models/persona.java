@@ -36,7 +36,8 @@ public class persona {
     @Override
     public String toString() {
         String[]tipopeso={"Flaco","perfecto","Gordo"};
-        return "Nombre: " + nombre + "\n" +
+        return "_______________________________" + "\n" +
+                "Nombre: " + nombre + "\n" +
                 "Apellidos: " + apellidos + "\n" +
                 "Edad: " + edad + "\n" +
                 "DNI: " + DNI + "\n" +
