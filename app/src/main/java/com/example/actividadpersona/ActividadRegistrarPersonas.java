@@ -2,6 +2,7 @@ package com.example.actividadpersona;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,9 +25,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import AccesoDatos.DAOPersona;
 import models.persona;
 
 public class ActividadRegistrarPersonas extends AppCompatActivity {
@@ -35,9 +39,9 @@ public class ActividadRegistrarPersonas extends AppCompatActivity {
     RadioGroup rgSexo;
     Spinner spCiudad;
     ImageView imgFoto;
-
+    DAOPersona oDAOPersona = new DAOPersona();
     String[] ciudades={"Seleccionar Ciudad","Cajamarca","Trujillo","Lima","Chiclayo","Arequipa"};
-    Uri imgSelecionado=null;
+    byte[] imgSelecionado=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,9 +99,13 @@ public class ActividadRegistrarPersonas extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, oInteto);
         if (requestCode==100){
             if(resultCode==RESULT_OK){
-
-                imgSelecionado=oInteto.getData();
-                imgFoto.setImageURI(imgSelecionado);
+                Uri foto= oInteto.getData();
+                imgFoto.setImageURI(foto);
+                imgFoto.buildDrawingCache();
+                Bitmap oBitMap=imgFoto.getDrawingCache();
+                ByteArrayOutputStream oFlujoSalida=new ByteArrayOutputStream();
+                oBitMap.compress(Bitmap.CompressFormat.PNG,0,oFlujoSalida);
+                imgSelecionado= oFlujoSalida.toByteArray();
             }
         }
     }
@@ -119,14 +127,20 @@ public class ActividadRegistrarPersonas extends AppCompatActivity {
             persona oPersona = new persona(nombres, apellidos, sexo, ciudad, edad, dni, peso, altura,imgSelecionado);
 
             if (oPersona.validarDNI()) {
-                Toast.makeText(this, "Registro Correcto", Toast.LENGTH_LONG).show();
+
                 /*new AlertDialog.Builder(this)
                         .setTitle("Datos Registrados")
                         .setMessage(oPersona.toString()) // Llamamos a toString() para mostrar los datos
                         .setPositiveButton("Aceptar", (dialog, which) -> dialog.dismiss()) // Botón de cierre
                         .show();*/
-                ActividadPrincipal.listaPersona.add(oPersona);
-                cuadroDialogo();
+                //ActividadPrincipal.listaPersona.add(oPersona);
+                DAOPersona oDAOPersona = new DAOPersona();
+                if (oDAOPersona.Agregar(this,oPersona)){
+                    Toast.makeText(this, "Registro Correcto", Toast.LENGTH_LONG).show();
+                    cuadroDialogo();
+                }
+                else
+                    Toast.makeText(this, "No se registro", Toast.LENGTH_LONG).show();
                 //limpiarCampos();
             } else {
                 Toast.makeText(this, "Error: DNI incorrecto (Debe contener 8 dígitos numéricos)", Toast.LENGTH_LONG).show();
@@ -197,7 +211,7 @@ public class ActividadRegistrarPersonas extends AppCompatActivity {
         return false;
     }
     private void listarPersona() {
-        if (ActividadPrincipal.listaPersona.isEmpty()) {
+        if (oDAOPersona.getSize()==0) {
             Toast.makeText(this, "No hay personas registradas", Toast.LENGTH_SHORT).show();
             return;
         }

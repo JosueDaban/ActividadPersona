@@ -13,9 +13,9 @@ public class persona {
     private String DNI;
     private double peso;
     private double altura;
-    private Uri foto;
+    private byte[] foto;
 
-    public persona(String nombre, String apellidos, String sexo, String ciudad, int edad, String DNI, double peso, double altura, Uri foto) {
+    public persona(String nombre, String apellidos, String sexo, String ciudad, int edad, String DNI, double peso, double altura, byte[] foto) {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.sexo = sexo;
@@ -26,8 +26,69 @@ public class persona {
         this.altura = altura;
         this.foto = foto;
     }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getDNI() {
+        return DNI;
+    }
+
+    public void setDNI(String DNI) {
+        this.DNI = DNI;
+    }
+
+    public double getPeso() {
+        return peso;
+    }
+
+    public void setPeso(double peso) {
+        this.peso = peso;
+    }
+
+    public double getAltura() {
+        return altura;
+    }
+
+    public void setAltura(double altura) {
+        this.altura = altura;
+    }
+
     //get de item Targeta
-    public Uri getFoto() {
+    public byte[] getFoto() {
         return foto;
     }
     public String getNombreCompleto() {

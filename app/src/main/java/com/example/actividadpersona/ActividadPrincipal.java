@@ -28,7 +28,7 @@ import models.persona;
 
 public class ActividadPrincipal extends AppCompatActivity {
 
-    public static List<persona> listaPersona = new ArrayList<>();
+    //public static List<persona> listaPersona = new ArrayList<>();
     TextView lbContar;
     int contador;
     @Override
@@ -82,6 +82,10 @@ public class ActividadPrincipal extends AppCompatActivity {
         }
         if (item.getItemId()==R.id.itemListar){
             oIntento= new Intent(this, ActividadListarPersonas.class);
+            startActivity(oIntento);
+        }
+        if (item.getItemId()==R.id.itemLlamadas){
+            oIntento= new Intent(this, ActividadLlamadas.class);
             startActivity(oIntento);
         }
         return super.onOptionsItemSelected(item);

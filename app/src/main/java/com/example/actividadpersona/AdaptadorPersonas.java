@@ -2,6 +2,8 @@ package com.example.actividadpersona;
 
 import android.app.Person;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +13,16 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import AccesoDatos.DAOPersona;
 import models.persona;
 
 public class AdaptadorPersonas extends BaseAdapter {
-    private List<persona> listaPersonas;
+    private DAOPersona oDAOPersona;
+    //private List<persona> listaPersonas;
     private Context contexto;
     LayoutInflater inflater;
-    public AdaptadorPersonas(List<persona> listaPersonas, Context contexto) {
-        this.listaPersonas = listaPersonas;
+    public AdaptadorPersonas(DAOPersona oDAOPersona, Context contexto) {
+        this.oDAOPersona = oDAOPersona;
         this.contexto = contexto;
         inflater= (LayoutInflater) contexto.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -26,7 +30,7 @@ public class AdaptadorPersonas extends BaseAdapter {
     //crea un numero especifica de tarjetas
     @Override
     public int getCount() {
-        return listaPersonas.size();
+        return oDAOPersona.getSize();
     }
 
     //este metodo se utiliza si quieres optener algo de alguna de las tarjetas
@@ -50,15 +54,23 @@ public class AdaptadorPersonas extends BaseAdapter {
         TextView peso= vista.findViewById(R.id.lbTipoPeso);
         TextView mayorEdad= vista.findViewById(R.id.lbMayorMenorEdad);
         TextView procedencia= vista.findViewById(R.id.lbProcedencia);
-        imgFoto.setImageURI(listaPersonas.get(i).getFoto());
-        nombre.setText(listaPersonas.get(i).getNombreCompleto());
-        peso.setText(listaPersonas.get(i).getTipoPeso());
-        mayorEdad.setText(listaPersonas.get(i).getTipoPersona());
-        if (listaPersonas.get(i).getSexo().equals("Femenino"))
+        //imgFoto.setImageURI(oDAOPersona.getObjetoPersona(i).getFoto());
+        //se pone un metodo para convertir la imagen a bitmap
+        imgFoto.setImageBitmap(convertirBitMap(oDAOPersona.getObjetoPersona(i).getFoto()));
+        nombre.setText(oDAOPersona.getObjetoPersona(i).getNombreCompleto());
+        peso.setText(oDAOPersona.getObjetoPersona(i).getTipoPeso());
+        mayorEdad.setText(oDAOPersona.getObjetoPersona(i).getTipoPersona());
+        if (oDAOPersona.getObjetoPersona(i).getSexo().equals("Femenino"))
             imgSexo.setImageResource(R.drawable.hembra);
         else
             imgSexo.setImageResource(R.drawable.masculino);
-        procedencia.setText(listaPersonas.get(i).getCiudad());
+        procedencia.setText(oDAOPersona.getObjetoPersona(i).getCiudad());
+
+
         return vista;
+    }
+
+    private Bitmap convertirBitMap(byte[] foto) {
+        return BitmapFactory.decodeByteArray(foto,0,foto.length);
     }
 }
